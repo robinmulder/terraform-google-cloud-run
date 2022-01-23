@@ -21,4 +21,20 @@ module "cloud_run" {
   project_id   = var.project_id
   location     = "us-central1"
   image        = "us-docker.pkg.dev/cloudrun/container/hello"
+
+  env_secret_vars = [
+    {
+      name = "SECRET_MESSAGE_TFVARS"
+      value_from = [{
+        secret_key_ref = {
+          name = "cloud-run-env-var-1"
+          key  = "1"
+        }
+      }]
+    },
+  ]
+
+  service_annotations = {
+    "run.googleapis.com/launch-stage" = "BETA"
+  }
 }

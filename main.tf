@@ -24,6 +24,7 @@ resource "google_cloud_run_service" "main" {
   metadata {
     labels      = var.service_labels
     annotations = var.service_annotations
+    generation  = var.generation
   }
 
   template {
