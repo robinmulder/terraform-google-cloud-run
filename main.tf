@@ -15,7 +15,7 @@
  */
 
 resource "google_cloud_run_service" "main" {
-  provider                   = google-beta
+  provider                   = google
   name                       = var.service_name
   location                   = var.location
   project                    = var.project_id
@@ -24,7 +24,6 @@ resource "google_cloud_run_service" "main" {
   metadata {
     labels      = var.service_labels
     annotations = var.service_annotations
-    generation  = var.generation
   }
 
   template {

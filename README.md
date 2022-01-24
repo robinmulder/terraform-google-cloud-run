@@ -90,9 +90,9 @@ These sections describe requirements for using this module.
 
 ### Software
 - [Terraform](https://www.terraform.io/downloads.html) ~> v0.13+
-- [Terraform Provider for GCP](https://github.com/terraform-providers/terraform-provider-google) ~> v3.53+
+- [Terraform Provider for GCP](https://github.com/terraform-providers/terraform-provider-google) ~> v4.0+
 - [Terraform Provider for GCP Beta](https://github.com/terraform-providers/terraform-provider-google-beta) ~>
-  v3.53+
+  v4.0+
 
 ### Service Account
 

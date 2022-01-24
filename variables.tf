@@ -70,12 +70,6 @@ variable "service_annotations" {
 }
 
 // Metadata
-variable "generation" {
-  type        = string
-  description = "Execution Environment or Generation. Possible values are gen1 and gen2"
-  default     = "gen1"
-}
-
 variable "template_labels" {
   type        = map(string)
   description = "A set of key/value label pairs to assign to the container metadata"
