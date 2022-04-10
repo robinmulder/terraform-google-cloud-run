@@ -115,6 +115,19 @@ resource "google_cloud_run_service" "main" {
       revision_name   = lookup(traffic.value, "latest_revision") ? null : lookup(traffic.value, "revision_name")
     }
   }
+
+  # Ignore any changes to values that might be updated by a new deployment
+  lifecycle {
+    ignore_changes = [
+      metadata[0].annotations["client.knative.dev/user-image"],
+      metadata[0].annotations["run.googleapis.com/client-name"],
+      template[0].metadata[0].annotations["client.knative.dev/user-image"],
+      template[0].metadata[0].annotations["run.googleapis.com/client-name"],
+      template[0].spec[0].containers[0].image,
+      template[0].spec[0].containers[0].env,
+      traffic
+    ]
+  }
 }
 
 resource "google_cloud_run_domain_mapping" "domain_map" {
