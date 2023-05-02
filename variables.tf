@@ -46,12 +46,14 @@ variable "traffic_split" {
     latest_revision = bool
     percent         = number
     revision_name   = string
+    tag             = string
   }))
   description = "Managing traffic routing to the service"
   default = [{
     latest_revision = true
     percent         = 100
     revision_name   = "v1-0-0"
+    tag             = null
   }]
 }
 
@@ -87,11 +89,17 @@ variable "template_annotations" {
   }
 }
 
+variable "encryption_key" {
+  description = "CMEK encryption key self-link expected in the format projects/PROJECT/locations/LOCATION/keyRings/KEY-RING/cryptoKeys/CRYPTO-KEY."
+  type        = string
+  default     = null
+}
+
 // template spec
 variable "container_concurrency" {
   type        = number
   description = "Concurrent request limits to the service"
-  default     = 0
+  default     = null
 }
 
 variable "timeout_seconds" {
@@ -125,7 +133,7 @@ variable "volumes" {
 variable "limits" {
   type        = map(string)
   description = "Resource limits to the container"
-  default     = {}
+  default     = null
 }
 variable "requests" {
   type        = map(string)
@@ -188,9 +196,9 @@ variable "volume_mounts" {
 
 // Domain Mapping
 variable "verified_domain_name" {
-  type        = string
-  description = "Custom Domain Name"
-  default     = ""
+  type        = list(string)
+  description = "List of Custom Domain Name"
+  default     = []
 }
 
 variable "force_override" {

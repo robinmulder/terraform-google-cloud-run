@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+locals {
+  cmek_template_annotation = var.encryption_key != null ? { "run.googleapis.com/encryption-key" = var.encryption_key } : {}
+  template_annotations     = merge(var.template_annotations, local.cmek_template_annotation)
+}
+
 resource "google_cloud_run_service" "main" {
   provider                   = google-beta
   name                       = var.service_name
@@ -99,8 +104,8 @@ resource "google_cloud_run_service" "main" {
     } // spec
     metadata {
       labels      = var.template_labels
-      annotations = var.template_annotations
-      name        = var.generate_revision_name ? null : "${var.service_name}-${var.traffic_split.0.revision_name}"
+      annotations = local.template_annotations
+      name        = var.generate_revision_name ? null : "${var.service_name}-${var.traffic_split[0].revision_name}"
     } // metadata
   }   // template
 
@@ -113,6 +118,7 @@ resource "google_cloud_run_service" "main" {
       percent         = lookup(traffic.value, "percent", 100)
       latest_revision = lookup(traffic.value, "latest_revision", null)
       revision_name   = lookup(traffic.value, "latest_revision") ? null : lookup(traffic.value, "revision_name")
+      tag             = lookup(traffic.value, "tag", null)
     }
   }
 
@@ -134,10 +140,10 @@ resource "google_cloud_run_service" "main" {
 }
 
 resource "google_cloud_run_domain_mapping" "domain_map" {
-  count    = var.verified_domain_name != "" ? 1 : 0
+  for_each = toset(var.verified_domain_name)
   provider = google-beta
   location = google_cloud_run_service.main.location
-  name     = var.verified_domain_name
+  name     = each.value
   project  = google_cloud_run_service.main.project
 
   metadata {
@@ -150,6 +156,12 @@ resource "google_cloud_run_domain_mapping" "domain_map" {
     route_name       = google_cloud_run_service.main.name
     force_override   = var.force_override
     certificate_mode = var.certificate_mode
+  }
+
+  lifecycle {
+    ignore_changes = [
+      metadata[0].annotations["run.googleapis.com/operation-id"],
+    ]
   }
 }
 
