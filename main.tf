@@ -132,6 +132,8 @@ resource "google_cloud_run_service" "main" {
       template[0].metadata[0].annotations["client.knative.dev/user-image"],
       template[0].metadata[0].annotations["run.googleapis.com/client-name"],
       template[0].metadata[0].annotations["run.googleapis.com/client-version"],
+      template[0].metadata[0].labels["client.knative.dev/nonce"],
+      template[0].metadata[0].labels["run.googleapis.com/startupProbeType"],
       template[0].spec[0].containers[0].image,
       template[0].spec[0].containers[0].env,
       traffic
