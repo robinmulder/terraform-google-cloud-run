@@ -18,7 +18,7 @@ resource "google_cloud_run_v2_job" "job" {
   name         = var.name
   project      = var.project_id
   location     = var.location
-  launch_stage = "BETA"
+  launch_stage = "GA"
   template {
     template {
       containers {
@@ -54,11 +54,16 @@ resource "google_cloud_run_v2_job" "job" {
   }
 
   # Ignore any changes to values that might be updated by a new deployment
+  # and because of missing module features (volumes and vpc access)
   lifecycle {
     ignore_changes = [
+      client
       annotations["client.knative.dev/user-image"],
       template[0].annotations["client.knative.dev/user-image"],
       template[0].template[0].containers[0].env
+      template[0].template[0].containers[0].volume_mounts
+      template[0].template[0].volumes
+      template[0].template[0].vpc_access
     ]
   }
 }
