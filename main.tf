@@ -125,10 +125,12 @@ resource "google_cloud_run_service" "main" {
   # Ignore any changes to values that might be updated by a new deployment
   lifecycle {
     ignore_changes = [
+      annotations["client.knative.dev/user-image"],
       metadata[0].annotations["client.knative.dev/user-image"],
       metadata[0].annotations["run.googleapis.com/client-name"],
       metadata[0].annotations["run.googleapis.com/client-version"],
       metadata[0].annotations["run.googleapis.com/operation-id"],
+      template[0].annotations["client.knative.dev/user-image"],
       template[0].metadata[0].annotations["client.knative.dev/user-image"],
       template[0].metadata[0].annotations["run.googleapis.com/client-name"],
       template[0].metadata[0].annotations["run.googleapis.com/client-version"],
@@ -136,6 +138,7 @@ resource "google_cloud_run_service" "main" {
       template[0].metadata[0].labels["run.googleapis.com/startupProbeType"],
       template[0].spec[0].containers[0].image,
       template[0].spec[0].containers[0].env,
+      template[0].template[0].containers[0].env,
       traffic
     ]
   }
