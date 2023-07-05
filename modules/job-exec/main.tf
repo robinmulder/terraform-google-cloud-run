@@ -57,12 +57,12 @@ resource "google_cloud_run_v2_job" "job" {
   # and because of missing module features (volumes and vpc access)
   lifecycle {
     ignore_changes = [
-      client
+      client,
       annotations["client.knative.dev/user-image"],
       template[0].annotations["client.knative.dev/user-image"],
-      template[0].template[0].containers[0].env
-      template[0].template[0].containers[0].volume_mounts
-      template[0].template[0].volumes
+      template[0].template[0].containers[0].env,
+      template[0].template[0].containers[0].volume_mounts,
+      template[0].template[0].volumes,
       template[0].template[0].vpc_access
     ]
   }
