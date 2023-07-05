@@ -52,6 +52,15 @@ resource "google_cloud_run_v2_job" "job" {
       }
     }
   }
+
+  # Ignore any changes to values that might be updated by a new deployment
+  lifecycle {
+    ignore_changes = [
+      annotations["client.knative.dev/user-image"],
+      template[0].annotations["client.knative.dev/user-image"],
+      template[0].template[0].containers[0].env
+    ]
+  }
 }
 
 data "google_client_config" "default" {}
