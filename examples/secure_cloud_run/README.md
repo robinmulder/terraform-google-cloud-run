@@ -22,7 +22,7 @@ The resources/services/activations/deletions that this example will create/trigg
   * Allow VPC Egress to Private Ranges Only.
   * Creates a Cloud Run Service.
   * Creates a Load Balancer Service using Google-managed SSL certificates.
-  * Creates Cloud Armor Service only including the preconfigured rules for SQLi, XSS, LFI, RCE, RFI, Scannerdetection, Protocolattack and Sessionfixation.
+  * Creates Cloud Armor Service only including the pre-configured rules for SQLi, XSS, LFI, RCE, RFI, Scannerdetection, Protocolattack and Sessionfixation.
 
 ## Organization Policies
 
@@ -63,7 +63,7 @@ This example assumes that below mentioned pre-requisites are in place before con
 | create\_cloud\_armor\_policies | When `true`, the terraform will create the Cloud Armor policies. When `false`, the user must provide their own Cloud Armor name in `cloud_armor_policies_name`. | `bool` | `true` | no |
 | domain | Domain list to run on the load balancer. Used if `ssl` is `true`. | `list(string)` | n/a | yes |
 | folder\_id | The folder ID to apply the policy to. | `string` | `""` | no |
-| groups | Groups which will have roles assigned.<br>  The Serverless Administrators email group which the following roles will be added: Cloud Run Admin, Compute Network Viewer and Compute Network User.<br>  The Serverless Security Administrators email group which the following roles will be added: Cloud Run Viewer, Cloud KMS Viewer and Artifact Registry Reader.<br>  The Cloud Run Developer email group which the following roles will be added: Cloud Run Developer, Artifact Registry Writer and Cloud KMS CryptoKey Encrypter.<br>  The Cloud Run User email group which the following roles will be added: Cloud Run Invoker. | <pre>object({<br>    group_serverless_administrator          = optional(string, null)<br>    group_serverless_security_administrator = optional(string, null)<br>    group_cloud_run_developer               = optional(string, null)<br>    group_cloud_run_developer               = optional(string, null)<br>    group_cloud_run_user                    = optional(string, null)<br>  })</pre> | `{}` | no |
+| groups | Groups which will have roles assigned.<br>  The Serverless Administrators email group which the following roles will be added: Cloud Run Admin, Compute Network Viewer and Compute Network User.<br>  The Serverless Security Administrators email group which the following roles will be added: Cloud Run Viewer, Cloud KMS Viewer and Artifact Registry Reader.<br>  The Cloud Run Developer email group which the following roles will be added: Cloud Run Developer, Artifact Registry Writer and Cloud KMS CryptoKey Encrypter.<br>  The Cloud Run User email group which the following roles will be added: Cloud Run Invoker. | <pre>object({<br>    group_serverless_administrator          = optional(string, null)<br>    group_serverless_security_administrator = optional(string, null)<br>    group_cloud_run_developer               = optional(string, null)<br>    group_cloud_run_user                    = optional(string, null)<br>  })</pre> | `{}` | no |
 | ip\_cidr\_range | The range of internal addresses that are owned by the subnetwork and which is going to be used by VPC Connector. For example, 10.0.0.0/28 or 192.168.0.0/28. Ranges must be unique and non-overlapping within a network. Only IPv4 is supported. | `string` | n/a | yes |
 | kms\_project\_id | The project where KMS will be created. | `string` | n/a | yes |
 | organization\_id | The organization ID to apply the policy to. | `string` | `""` | no |

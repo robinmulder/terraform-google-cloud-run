@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Google LLC
+ * Copyright 2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-terraform {
-  required_version = ">= 0.13"
+variable "project_id" {
+  description = "The project ID to deploy to"
+  type        = string
+}
 
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "< 5.0"
-    }
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = "< 5.0"
-    }
-  }
+variable "cloud_run_deletion_protection" {
+  type        = bool
+  description = "This field prevents Terraform from destroying or recreating the Cloud Run v2 Jobs and Services"
+  default     = true
 }

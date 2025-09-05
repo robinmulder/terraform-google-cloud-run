@@ -15,8 +15,9 @@
  */
 
 module "serverless_project" {
-  source                      = "terraform-google-modules/project-factory/google"
-  version                     = "~> 14.2"
+  source  = "terraform-google-modules/project-factory/google"
+  version = "~> 17.0"
+
   random_project_id           = "true"
   activate_apis               = var.activate_apis
   name                        = var.project_name
@@ -24,6 +25,8 @@ module "serverless_project" {
   billing_account             = var.billing_account
   folder_id                   = var.folder_name
   disable_services_on_destroy = var.disable_services_on_destroy
+  deletion_policy             = var.project_deletion_policy
+
 
   svpc_host_project_id = var.network_project_id
   grant_network_role   = var.network_project_id != "" ? true : false
@@ -86,8 +89,14 @@ resource "google_project_iam_member" "gcs_pubsub_publishing" {
   member  = "serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"
 }
 
+resource "time_sleep" "wait_1m" {
+  depends_on      = [google_project_service_identity.eventarc_sa]
+  create_duration = "1m"
+}
+
 resource "google_project_iam_member" "eventarc_service_agent" {
-  project = module.serverless_project.project_id
-  role    = "roles/eventarc.serviceAgent"
-  member  = "serviceAccount:${google_project_service_identity.eventarc_sa.email}"
+  project    = module.serverless_project.project_id
+  role       = "roles/eventarc.serviceAgent"
+  member     = "serviceAccount:${google_project_service_identity.eventarc_sa.email}"
+  depends_on = [time_sleep.wait_1m]
 }

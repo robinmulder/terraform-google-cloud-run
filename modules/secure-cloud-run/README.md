@@ -1,6 +1,6 @@
 # Secure Cloud Run
 
-This module handles the deployment required for Cloud Run usage. Secure-cloud-run module will call the secure-cloud-run-core, secure-cloud-run-net and secure-cloud-run-net modules.
+This module handles the deployment required for Cloud Run usage. Secure-cloud-run module will call the secure-cloud-run-core, secure-serverless-net and secure-cloud-run-security modules.
 
 When using a Shared VPC, you can chose where to create the VPC Connector.
 
@@ -8,7 +8,7 @@ _Note:_ When using a single VPC you should provides VPC and Serverless project i
 
 The resources/services/activations/deletions that this module will create/trigger are:
 
-* secure-cloud-run-network module will apply:
+* secure-serverless-net module will apply:
   * Creates Firewall rules on your **VPC Project**.
     * Serverless to VPC Connector
     * VPC Connector to Serverless
@@ -18,7 +18,7 @@ The resources/services/activations/deletions that this module will create/trigge
   * Creates Serverless Connector on your **VPC Project** or **Serverless Project**. Refer the comparison below:
     * Advantages of creating connectors in the [VPC Project](https://cloud.google.com/run/docs/configuring/connecting-shared-vpc#host-project)
     * Advantages of creating connectors in the [Serverless Project](https://cloud.google.com/run/docs/configuring/connecting-shared-vpc#service-projects)
-  * Grant the necessary roles for Cloud Run are able to use VPC Connector on your Shared VPC when creating VPC Connector in host project.
+  * Grant the necessary roles for Cloud Run be able to use VPC Connector on your Shared VPC when creating VPC Connector in host project.
     * Grant Network User role to Cloud Services service account.
     * Grant VPC Access User to Cloud Run Service Identity when deploying VPC Access.
 
@@ -46,7 +46,7 @@ The resources/services/activations/deletions that this module will create/trigge
 * secure-cloud-run-core module will apply:
   * Creates a Cloud Run Service.
   * Creates a Load Balancer Service using Google-managed SSL certificates.
-  * Creates Cloud Armor Service only including the preconfigured rules for SQLi, XSS, LFI, RCE, RFI, Scannerdetection, Protocolattack and Sessionfixation.
+  * Creates Cloud Armor Service only including the pre-configured rules for SQLi, XSS, LFI, RCE, RFI, Scannerdetection, Protocolattack and Sessionfixation.
 
 ## Usage
 
@@ -89,7 +89,7 @@ module "secure_cloud_run" {
 | env\_vars | Environment variables (cleartext) | <pre>list(object({<br>    value = string<br>    name  = string<br>  }))</pre> | `[]` | no |
 | folder\_id | The folder ID to apply the policy to. | `string` | `""` | no |
 | grant\_artifact\_register\_reader | When true it will grant permission to read an image from your artifact registry. When true, you must provide `artifact_registry_repository_project_id`, `artifact_registry_repository_location` and `artifact_registry_repository_name`. | `bool` | `false` | no |
-| groups | Groups which will have roles assigned.<br>  The Serverless Administrators email group which the following roles will be added: Cloud Run Admin, Compute Network Viewer and Compute Network User.<br>  The Serverless Security Administrators email group which the following roles will be added: Cloud Run Viewer, Cloud KMS Viewer and Artifact Registry Reader.<br>  The Cloud Run Developer email group which the following roles will be added: Cloud Run Developer, Artifact Registry Writer and Cloud KMS CryptoKey Encrypter.<br>  The Cloud Run User email group which the following roles will be added: Cloud Run Invoker. | <pre>object({<br>    group_serverless_administrator          = optional(string, null)<br>    group_serverless_security_administrator = optional(string, null)<br>    group_cloud_run_developer               = optional(string, null)<br>    group_cloud_run_developer               = optional(string, null)<br>    group_cloud_run_user                    = optional(string, null)<br>  })</pre> | `{}` | no |
+| groups | Groups which will have roles assigned.<br>  The Serverless Administrators email group which the following roles will be added: Cloud Run Admin, Compute Network Viewer and Compute Network User.<br>  The Serverless Security Administrators email group which the following roles will be added: Cloud Run Viewer, Cloud KMS Viewer and Artifact Registry Reader.<br>  The Cloud Run Developer email group which the following roles will be added: Cloud Run Developer, Artifact Registry Writer and Cloud KMS CryptoKey Encrypter.<br>  The Cloud Run User email group which the following roles will be added: Cloud Run Invoker. | <pre>object({<br>    group_serverless_administrator          = optional(string, null)<br>    group_serverless_security_administrator = optional(string, null)<br>    group_cloud_run_developer               = optional(string, null)<br>    group_cloud_run_user                    = optional(string, null)<br>  })</pre> | `{}` | no |
 | image | Image url to be deployed on Cloud Run. | `string` | n/a | yes |
 | ip\_cidr\_range | The range of internal addresses that are owned by the subnetwork and which is going to be used by VPC Connector. For example, 10.0.0.0/28 or 192.168.0.0/28. Ranges must be unique and non-overlapping within a network. Only IPv4 is supported. | `string` | n/a | yes |
 | key\_name | The name of KMS Key to be created and used in Cloud Run. | `string` | `"cloud-run-kms-key"` | no |
@@ -160,6 +160,7 @@ The Secure-cloud-run module will enable the following APIs to the VPC Project:
 * Compute API: `compute.googleapis.com`
 
 The Secure-cloud-run module will enable the following APIs to the KMS Project:
+
 * Cloud KMS API: `cloudkms.googleapis.com`
 
 ### Service Account

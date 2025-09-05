@@ -16,7 +16,7 @@
 
 output "serverless_folder_id" {
   value       = google_folder.fld_serverless.name
-  description = "The folder created to alocate Serverless infra."
+  description = "The folder created to allocate Serverless infra."
 
   depends_on = [
     time_sleep.wait_vpc_sc_propagation
@@ -25,7 +25,7 @@ output "serverless_folder_id" {
 
 output "network_project_id" {
   value       = [for network in module.network : network.project_id]
-  description = "Project ID of the project created to host the Cloud Run Network."
+  description = "Project ID of the project created to host the Serverless Network."
 
   depends_on = [
     time_sleep.wait_vpc_sc_propagation
@@ -34,7 +34,7 @@ output "network_project_id" {
 
 output "serverless_project_ids" {
   value       = [for project in module.serverless_project : project.project_id]
-  description = "Project ID of the projects created to deploy Cloud Run."
+  description = "Project ID of the projects created to deploy Serverless application."
 
   depends_on = [
     time_sleep.wait_vpc_sc_propagation
@@ -43,7 +43,7 @@ output "serverless_project_ids" {
 
 output "serverless_project_numbers" {
   value       = { for project in module.serverless_project : project.project_id => project.project_number }
-  description = "Project number of the projects created to deploy Cloud Run."
+  description = "Project number of the projects created to deploy Serverless applications."
 
   depends_on = [
     time_sleep.wait_vpc_sc_propagation
@@ -122,6 +122,15 @@ output "cloud_serverless_service_identity_email" {
   ]
 }
 
+output "access_context_manager_policy_id" {
+  value       = local.access_context_manager_policy_id
+  description = "Access Context Manager ID."
+
+  depends_on = [
+    time_sleep.wait_vpc_sc_propagation
+  ]
+}
+
 output "restricted_service_perimeter_name" {
   value       = module.regular_service_perimeter.perimeter_name
   description = "Service Perimeter name."
@@ -134,6 +143,15 @@ output "restricted_service_perimeter_name" {
 output "restricted_access_level_name" {
   value       = module.access_level_members.name
   description = "Access level name."
+
+  depends_on = [
+    time_sleep.wait_vpc_sc_propagation
+  ]
+}
+
+output "restricted_access_level_name_id" {
+  value       = module.access_level_members.name_id
+  description = "Access level name id."
 
   depends_on = [
     time_sleep.wait_vpc_sc_propagation
